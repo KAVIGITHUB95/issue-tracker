@@ -14,10 +14,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from '@/app/api/issues/createIssueSchema';
 import { z } from "zod";
 import ErrorMessage from '@/app/components/ErrorMessage';
+
+
+
 import Spinner from '@/app/components/Spinner';
-
-
-
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -32,21 +32,7 @@ const NewIssuePage = () => {
     const [error, setError] = useState("");
     const [isSubmitting, setSubmitting] = useState(false);
 
-    return (
-
-        <div className="max-w-xl">
-
-
-            {error && (
-
-                <Callout.Root color="red" className="mb-5">
-
-                    <Callout.Text>{error}</Callout.Text>
-                </Callout.Root>
-            )}
-
-
-            <form className="space-y-3" onSubmit={handleSubmit(async (data) => {
+    const onSubmit = handleSubmit(async (data) => {
 
                 try {
 
@@ -63,7 +49,23 @@ const NewIssuePage = () => {
 
                     setError("An unexpected error occured.");
                 }
-            })}>
+            
+            });
+
+    return (
+
+        <div className="max-w-xl">
+
+
+            {error && (
+
+                <Callout.Root color="red" className="mb-5">
+
+                    <Callout.Text>{error}</Callout.Text>
+                </Callout.Root>
+            )}
+
+            <form className="space-y-3" onSubmit={onSubmit}>
 
                 <TextField.Root placeholder="Title" {...register("title")}>
 

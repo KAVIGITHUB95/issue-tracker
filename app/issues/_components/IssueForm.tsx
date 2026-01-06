@@ -31,52 +31,54 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         resolver: zodResolver(issueSchema)
     });
     const [error, setError] = useState("");
-    
+
     const [isSubmitting, setSubmitting] = useState(false);
-    
+
     const onSubmit = handleSubmit(async (data) => {
         try {
             setSubmitting(true);
             if (issue)
-                 await axios.patch("/api/issues/" + issue.id, data);
+                await axios.patch("/api/issues/" + issue.id, data);
             else
-            
-                await axios.post("/api/issues", data);
-            router.push("/issues");
-        } catch (error) {
 
+                await axios.post("/api/issues", data);
+
+            router.push("/issues");
+
+            router.refresh();
+
+        } catch (error) {
             setSubmitting(false);
-            
+
             setError("An unexpected error occured.");
+        
         }
     });
-    
     return (
+        
+        
         <div className="max-w-xl">
 
             {error && (
-                
+
                 <Callout.Root color="red" className="mb-5">
                     <Callout.Text>{error}</Callout.Text>
                 </Callout.Root>
-            
-            
-            )}
 
+            )}
             <form className="space-y-3" onSubmit={onSubmit}>
 
                 <TextField.Root defaultValue={issue?.title} placeholder="Title" {...register("title")}>
+                
                 </TextField.Root>
                 <ErrorMessage>{errors.title?.message}</ErrorMessage>
-
                 <Controller name="description" control={control} defaultValue={issue?.description} render={({ field }) => <SimpleMDE placeholder="Description" {...field} />} />
-                <ErrorMessage>{errors.description?.message}</ErrorMessage>
                 
-                <Button disabled={isSubmitting}>{issue ? "Update Issue" : "Submit New Issue"} {" "} {isSubmitting && <Spinner />}</Button>mbm
+                <ErrorMessage>{errors.description?.message}</ErrorMessage>
+                <Button disabled={isSubmitting}>{issue ? "Update Issue" : "Submit New Issue"} {" "} {isSubmitting && <Spinner />}</Button>
             </form>
         </div>
 
     )
 }
-
 export default IssueForm
